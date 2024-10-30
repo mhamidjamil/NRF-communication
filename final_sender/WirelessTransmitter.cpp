@@ -12,5 +12,5 @@ void WirelessTransmitter::begin() {
 }
 
 bool WirelessTransmitter::sendAlert(const char *message) {
-  return radio.write(&message, sizeof(message));
+  return radio.write(message, strlen(message) + 1);
 }
