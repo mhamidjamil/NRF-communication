@@ -39,3 +39,9 @@ String MotionSensor::getMotionData() {
 int MotionSensor::calculateChange(int currentValue, int previousValue) {
   return abs(currentValue - previousValue);
 }
+
+void MotionSensor::setThreshold(int currentValue) {
+  this->threshold = currentValue;
+}
+
+int MotionSensor::getThreshold() { return this->threshold; }

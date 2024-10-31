@@ -6,6 +6,8 @@ public:
   void begin();
   bool isSignificantMovement();
   String getMotionData();
+  void setThreshold(int newValue);
+  int getThreshold();
 
 private:
   int16_t accelerometer_x, accelerometer_y, accelerometer_z;

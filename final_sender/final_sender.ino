@@ -19,9 +19,7 @@ void setup() {
   xTaskCreate(checkMovementTask, "MotionCheck", 1000, NULL, 1, NULL);
 }
 
-void loop() {
-  // Main loop remains empty as tasks handle the functionality
-}
+void loop() { checkSerialCommands(); }
 
 void checkMovementTask(void *pvParameters) {
   while (true) {
@@ -36,3 +34,41 @@ void checkMovementTask(void *pvParameters) {
     vTaskDelay(pdMS_TO_TICKS(500)); // Task delay for efficiency
   }
 }
+
+void checkSerialCommands() {
+  if (Serial.available()) {
+    String command = Serial.readStringUntil('\n');
+
+    if (command.startsWith("set threshold")) {
+      int new_threshold = command.substring(13).toInt();
+      if (new_threshold > 0) {
+        Serial.print("Threshold setting to ");
+        Serial.println(new_threshold);
+        motionSensor.setThreshold(new_threshold);
+      } else {
+        Serial.println("Invalid threshold value.");
+      }
+    } else if (isIn(command, "print values")) {
+      println("Value of threshold is: " + String(motionSensor.getThreshold()));
+    } else {
+      println("Input not defined");
+    }
+  }
+}
+
+bool isIn(String mainString, String toFind) {
+  return mainString.indexOf(toFind) != -1;
+}
+
+bool isIn(String mainString, String toFind_1, String toFind_2) {
+  return (isIn(mainString, toFind_1) || isIn(mainString, toFind_2));
+}
+
+bool isIn(String mainString, String toFind_1, String toFind_2,
+          String toFind_3) {
+  return (isIn(mainString, toFind_1) || isIn(mainString, toFind_2) ||
+          isIn(mainString, toFind_3));
+}
+
+void println(String str) { Serial.println(str); }
+void print(String str) { Serial.print(str); }
