@@ -1,4 +1,5 @@
 #include "MotionSensor.h"
+#include <Arduino.h>
 
 MotionSensor::MotionSensor(int mpuAddr, int motionThreshold)
     : mpuAddress(mpuAddr), threshold(motionThreshold) {}
@@ -9,6 +10,12 @@ void MotionSensor::begin() {
   Wire.write(0x6B);
   Wire.write(0);
   Wire.endTransmission(true);
+}
+
+void MotionSensor::printMotionData(int x_axis, int y_axis, int z_axis,
+                                   int avgChange) {
+  Serial.println("X: " + String((x_axis)) + " Y: " + String(y_axis) +
+                 " Z: " + String(z_axis) + " avgChange: " + String(avgChange));
 }
 
 bool MotionSensor::isSignificantMovement() {
@@ -25,15 +32,17 @@ bool MotionSensor::isSignificantMovement() {
                    calculateChange(accelerometer_y, mainY)) /
                   2;
 
-  mainX = accelerometer_x;
-  mainY = accelerometer_y;
+  printMotionData(accelerometer_x, accelerometer_y, accelerometer_z, avgChange);
 
-  return avgChange > threshold;
-}
+  bool significantMovement = avgChange > threshold;
+  if (significantMovement) {
+    Serial.println("\n-------------------------------------------------\n");
+    mainX = accelerometer_x;
+    mainY = accelerometer_y;
+    delay(200);
+  }
 
-String MotionSensor::getMotionData() {
-  return String("X: ") + String(accelerometer_x) +
-         " Y: " + String(accelerometer_y) + " Z: " + String(accelerometer_z);
+  return significantMovement;
 }
 
 int MotionSensor::calculateChange(int currentValue, int previousValue) {

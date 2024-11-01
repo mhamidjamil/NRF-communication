@@ -31,7 +31,7 @@ void checkMovementTask(void *pvParameters) {
         Serial.println("Failed to send alert.");
       }
     }
-    vTaskDelay(pdMS_TO_TICKS(500)); // Task delay for efficiency
+    vTaskDelay(pdMS_TO_TICKS(200)); // Task delay for efficiency
   }
 }
 

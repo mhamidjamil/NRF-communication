@@ -4,8 +4,8 @@ class MotionSensor {
 public:
   MotionSensor(int mpuAddr, int motionThreshold);
   void begin();
+  void printMotionData(int x, int y, int z, int change);
   bool isSignificantMovement();
-  String getMotionData();
   void setThreshold(int newValue);
   int getThreshold();
 
